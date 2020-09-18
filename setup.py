@@ -237,4 +237,4 @@ def write_readme(filename='README.md', contents=''):
     return True
 
 if __name__ == "__main__":
-    raise NotImplemented("Coming soon!")
+    raise NotImplementedError("Coming soon!")
