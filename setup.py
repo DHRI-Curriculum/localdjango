@@ -148,7 +148,7 @@ def get_nav(counter, all_content, separator='&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbs
         file_content += '(../README.md)'
     else:
         file_content = f'← [{prev_title}]'
-        file_content += f'({prev_counter}-{all_content[prev_counter].get("slug")}.md)'
+        file_content += f'({prev_counter:02d}-{all_content[prev_counter].get("slug")}.md)'
 
     file_content += separator
 
@@ -156,7 +156,7 @@ def get_nav(counter, all_content, separator='&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbs
     if next_title == back_to_start:
         file_content += '(../README.md) ↺'
     else:
-        file_content += f'({next_counter}-{all_content[next_counter].get("slug")}.md) →'
+        file_content += f'({next_counter:02d}-{all_content[next_counter].get("slug")}.md) →'
 
     return file_content
 
@@ -188,7 +188,7 @@ def get_toc(all_content, as_dict=True):
     toc = OrderedDict()
     for counter, data in all_content.items():
         toc[counter] = {
-            'path': f'sections/{counter}-{data.get("slug")}.md',
+            'path': f'sections/{counter:02d}-{data.get("slug")}.md',
             'title': data.get("title")
         }
     if as_dict: return toc
