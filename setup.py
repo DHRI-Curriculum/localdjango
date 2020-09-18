@@ -1,4 +1,5 @@
 import re
+import os
 
 from collections import OrderedDict
 from pathlib import Path
@@ -256,6 +257,9 @@ def first(s):
 
 
 if __name__ == "__main__":
+
+    repo = os.path.realpath(__file__).split('/')[-3]
+
     # setup 'sections' directory
     check_sections_directory()
 
@@ -267,6 +271,10 @@ if __name__ == "__main__":
     workshop_title = input(bcolors.OKBLUE + f'\nWorkshop title? (enter for {workshop_title})\n' + bcolors.ENDC)
     if len(workshop_title) == 0:
         workshop_title = first(frontmatter_sections)
+
+    repo = input(bcolors.OKBLUE + f'\nRepository name? (enter for {repo})\n' + bcolors.ENDC)
+    if len(repo) == 0:
+        repo = os.path.realpath(__file__).split('/')[-3]
 
     # split-up + write lesson files
     all_content = split_lessons('lessons.md')
@@ -330,7 +338,7 @@ if __name__ == "__main__":
 
     ## Acknowledgements
     README += '## Acknowledgements\n\n'
-    README += 'This workshop is the result of a collaborative effort of a team of people, mostly involved presently or in the past, with the Graduate Center\'s Digital Initiatives. If you want to see statistics for contributions to this workshop, you can do so [here](./graphs/contributors). This is a list of all the contributors:\n\n'
+    README += f'This workshop is the result of a collaborative effort of a team of people, mostly involved presently or in the past, with the Graduate Center\'s Digital Initiatives. If you want to see statistics for contributions to this workshop, you can do so [here](https://www.github.com/DHRI-Curriculum/{repo}/graphs/contributors). This is a list of all the contributors:\n\n'
     README += frontmatter_sections.get("Acknowledgements") + '\n\n'
 
     ## Licensing information
