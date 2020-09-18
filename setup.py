@@ -178,7 +178,7 @@ def write_lessons(all_content):
         file_content += '---\n\n'
         file_content += get_nav(counter, all_content)
 
-        file_path = Path(f'sections/{counter}-{data.get("slug")}.md')
+        file_path = Path(f'sections/{counter:02d}-{data.get("slug")}.md')
         file_path.write_text(file_content)
 
     return True
