@@ -347,4 +347,4 @@ if __name__ == "__main__":
 
     write_readme('README.md', README)
 
-    print(bcolors.OKGREEN + f'\n...README.md has successfully been generated for {workshop_title}!' + bcolors.ENDC)
+    print(bcolors.OKGREEN + f'\nREADME.md has successfully been generated for {workshop_title}!' + bcolors.ENDC)
