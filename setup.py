@@ -235,3 +235,6 @@ def get_image_or_title(image_file='image.md', workshop_title=''):
 def write_readme(filename='README.md', contents=''):
     Path(filename).write_text(contents)
     return True
+
+if __name__ == "__main__":
+    raise NotImplemented("Coming soon!")
