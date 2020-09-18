@@ -1,14 +1,12 @@
-workshop_title = 'Introduction to Git and GitHub'
-
-license = '''<sub>[Digital Research Institute (DRI) Curriculum](http://purl.org/dc/terms/) by [Graduate Center Digital Initiatives](https://gcdi.commons.gc.cuny.edu/) is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/). Based on a work at <https://github.com/DHRI-Curriculum>. When sharing this material or derivative works, preserve this paragraph, changing only the title of the derivative work, or provide comparable attribution.</sub>
-
-[![Creative Commons License](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)'''
-
 import re
 
 from collections import OrderedDict
 from pathlib import Path
 
+
+LICENSE = '''<sub>[Digital Research Institute (DRI) Curriculum](http://purl.org/dc/terms/) by [Graduate Center Digital Initiatives](https://gcdi.commons.gc.cuny.edu/) is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/). Based on a work at <https://github.com/DHRI-Curriculum>. When sharing this material or derivative works, preserve this paragraph, changing only the title of the derivative work, or provide comparable attribution.</sub>
+
+[![Creative Commons License](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)'''
 
 IMAGES = r'!\[([^\]]*)\]\((.*?)(?=\"|\))(\".*\")?\)'
 ALL_IMAGES = re.compile(IMAGES)
@@ -203,23 +201,12 @@ def get_toc(all_content, as_dict=True):
     return toc_text
 
 
+def split_lessons(lessons_file='lessons.md'):
+    lessons = read(lessons_file)
 
-if __name__ == "__main__":
-    # read necessary files
-    lessons = read('lessons.md')
-    frontmatter = read('frontmatter.md')
-    image = read('image.md', required=False)
-
-    # setup 'sections' directory
-    check_sections_directory()
-
-    # preset variables
     all_content = OrderedDict()
     counter = 1
-    frontmatter_sections = split_into_sections(frontmatter, level_granularity=2, clear_empty_lines=False)
-    contexts = split_into_sections(frontmatter_sections.get("Contexts"))
 
-    # parse lessons/create all_content
     for lesson_title, lesson_content in split_into_sections(lessons, level_granularity=1, clear_empty_lines=False).items():
         all_content[counter] = {
             'title': lesson_title,
@@ -228,77 +215,23 @@ if __name__ == "__main__":
         }
         counter += 1
 
-    # write split-up lesson files
-    write_lessons(all_content)
+    return all_content
 
-    # generate table of contents
-    toc_text = get_toc(all_content, as_dict=False)
 
-    # Start putting together README.md
+def split_frontmatter(frontmatter_file='frontmatter.md'):
+    frontmatter = read(frontmatter_file)
+    frontmatter_sections = split_into_sections(frontmatter, level_granularity=2, clear_empty_lines=False)
+    return frontmatter_sections
 
-    ## 1. Image / title
-    if image:
-        README = f'{image}\n\n'
+
+def get_image_or_title(image_file='image.md', workshop_title=''):
+    t = read(image_file, required=False)
+    if t:
+        return t
     else:
-        README = f'# {workshop_title}\n\n'
+        return f'# {workshop_title}'
 
-    ## 2. Abstract
-    README += f'{frontmatter_sections.get("Abstract")}\n\n'
 
-    ## 3. Learning objectives
-    README += 'In this workshop, you will:\n\n'
-    README += frontmatter_sections.get('Learning Objectives') + '\n\n'
-
-    ## 4. Get started "button"
-    README += '---\n\n'
-    if frontmatter_sections.get('Estimated time'):
-        README += '<p align="center">This workshop is estimated to take you ' + frontmatter_sections.get('Estimated time') + ' to complete.</p>'
-    README += insert_get_started_button(url=get_toc(all_content)[1]['path'], center=True)
-
-    ## 5. Lessons (fka Table of Contents)
-    README += '---\n\n'
-    README += '## Lessons\n\n'
-    README += toc_text + '\n\n'
-    README += '---\n\n'
-
-    ## 6. Contexts/Before you get started
-    if frontmatter_sections.get('Prerequisites') or \
-        contexts.get('Ethical Considerations') or \
-        contexts.get('Pre-reading suggestions') or \
-        contexts.get('Projects that use these skills'):
-        README += '## Before you get started\n\n'
-
-    if frontmatter_sections.get('Prerequisites'):
-        README += f'If you do not have experience or basic knowledge of the following workshops, you may want to look into those before you start with {workshop_title}:\n\n'
-        README += frontmatter_sections.get('Prerequisites') + '\n\n'
-
-    if contexts.get('Ethical Considerations'):
-        README += '### Ethical Considerations\n\n'
-        README += f'Before you start the {workshop_title}, we want to remind you of some ethical considerations to take into account when you read through the lessons of this workshop:\n\n'
-        README += contexts.get('Ethical Considerations') + '\n\n'
-
-    if contexts.get('Pre-reading suggestions'):
-        README += '### Pre-reading suggestions\n\n'
-        README += f'Before you start the {workshop_title} workshop, you may want to read a couple of our pre-reading suggestions:\n\n'
-        README += contexts.get('Pre-reading suggestions') + '\n\n'
-
-    if contexts.get('Projects that use these skills'):
-        README += '### Projects that use these skills\n\n'
-        README += 'You may also want to check out a couple of projects that use the skills discussed in this workshop:\n\n'
-        README += contexts.get('Projects that use these skills') + '\n\n'
-
-    # Get started button
-    README += '---\n\n'
-    README += insert_get_started_button(get_toc(all_content))
-    README += '---\n\n'
-
-    ## Acknowledgements
-    README += '## Acknowledgements\n\n'
-    README += 'This workshop is the result of a collaborative effort of a team of people, mostly involved presently or in the past, with the Graduate Center\'s Digital Initiatives:\n\n'
-    README += frontmatter_sections.get("Acknowledgements") + '\n\n'
-
-    ## Licensing information
-    README += '---\n\n'
-    README += license + '\n'
-
-    Path('README.md').write_text(README)
+def write_readme(filename='README.md', contents=''):
+    Path(filename).write_text(contents)
+    return True
